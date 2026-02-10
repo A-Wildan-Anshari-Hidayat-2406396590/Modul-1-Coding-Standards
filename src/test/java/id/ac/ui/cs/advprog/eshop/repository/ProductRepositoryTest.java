@@ -65,4 +65,58 @@ class ProductRepositoryTest {
         assertEquals(product2.getProductId(), savedProduct.getProductId());
         assertFalse(productIterator.hasNext());
     }
+
+    @Test
+    void testFindByIdIfFound() {
+        Product product = new Product();
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product found = productRepository.findById(product.getProductId());
+        assertNotNull(found);
+        assertEquals(product.getProductId(), found.getProductId());
+        assertEquals("Sampo Cap Bambang", found.getProductName());
+    }
+
+    @Test
+    void testFindByIdIfNotFound() {
+        Product product = new Product();
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product found = productRepository.findById("non-existent-id");
+        assertNull(found);
+    }
+
+    @Test
+    void testEditProduct() {
+        Product product = new Product();
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId(product.getProductId());
+        updatedProduct.setProductName("Sampo Cap Bambang Edited");
+        updatedProduct.setProductQuantity(200);
+        Product result = productRepository.update(updatedProduct);
+
+        assertNotNull(result);
+        Product found = productRepository.findById(product.getProductId());
+        assertEquals("Sampo Cap Bambang Edited", found.getProductName());
+        assertEquals(200, found.getProductQuantity());
+    }
+
+    @Test
+    void testEditProductIfNotFound() {
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("non-existent-id");
+        updatedProduct.setProductName("Ghost Product");
+        updatedProduct.setProductQuantity(999);
+        Product result = productRepository.update(updatedProduct);
+
+        assertNull(result);
+    }
 }
