@@ -60,4 +60,14 @@ class ProductControllerTest {
         assertEquals("redirect:list", viewName);
         verify(service, times(1)).update(updatedProduct);
     }
+
+    @Test
+    void testDeleteProduct() {
+        when(service.delete(product.getProductId())).thenReturn(true);
+
+        String viewName = productController.deleteProduct(product.getProductId());
+
+        assertEquals("redirect:/product/list", viewName);
+        verify(service, times(1)).delete(product.getProductId());
+    }
 }

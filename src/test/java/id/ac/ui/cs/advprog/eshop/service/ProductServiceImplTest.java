@@ -83,4 +83,24 @@ class ProductServiceImplTest {
         assertNull(result);
         verify(productRepository, times(1)).update(updatedProduct);
     }
+
+    @Test
+    void testDeleteProduct() {
+        when(productRepository.delete(product.getProductId())).thenReturn(true);
+
+        boolean result = productService.delete(product.getProductId());
+
+        assertTrue(result);
+        verify(productRepository, times(1)).delete(product.getProductId());
+    }
+
+    @Test
+    void testDeleteProductIfNotFound() {
+        when(productRepository.delete("non-existent-id")).thenReturn(false);
+
+        boolean result = productService.delete("non-existent-id");
+
+        assertFalse(result);
+        verify(productRepository, times(1)).delete("non-existent-id");
+    }
 }

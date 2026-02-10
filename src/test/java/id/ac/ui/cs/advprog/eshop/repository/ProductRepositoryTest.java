@@ -119,4 +119,25 @@ class ProductRepositoryTest {
 
         assertNull(result);
     }
+
+    @Test
+    void testDeleteProduct() {
+        Product product = new Product();
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(100);
+        productRepository.create(product);
+
+        boolean deleted = productRepository.delete(product.getProductId());
+
+        assertTrue(deleted);
+        assertNull(productRepository.findById(product.getProductId()));
+        assertFalse(productRepository.findAll().hasNext());
+    }
+
+    @Test
+    void testDeleteProductIfNotFound() {
+        boolean deleted = productRepository.delete("non-existent-id");
+
+        assertFalse(deleted);
+    }
 }
