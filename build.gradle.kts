@@ -43,17 +43,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
     compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
+
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
     testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion") {
         exclude(group = "org.junit.jupiter")
         exclude(group = "org.junit.platform")
     }
     testImplementation("io.github.bonigarcia:webdrivermanager:$webdrivermanagerVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.register<Test>("functionalTest") {
