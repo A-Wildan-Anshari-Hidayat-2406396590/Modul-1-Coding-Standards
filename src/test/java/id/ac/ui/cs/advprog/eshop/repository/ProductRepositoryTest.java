@@ -19,6 +19,8 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        // Method left intentionally empty. Can be used for shared setup in the future
+        // if needed.
     }
 
     @Test
