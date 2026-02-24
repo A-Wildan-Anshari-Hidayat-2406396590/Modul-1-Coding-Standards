@@ -19,6 +19,8 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        // Method left intentionally empty. Can be used for shared setup in the future
+        // if needed.
     }
 
     @Test
@@ -111,6 +113,11 @@ class ProductRepositoryTest {
 
     @Test
     void testEditProductIfNotFound() {
+        Product setupProduct = new Product();
+        setupProduct.setProductName("Sampo Cap Bambang");
+        setupProduct.setProductQuantity(100);
+        productRepository.create(setupProduct);
+
         Product updatedProduct = new Product();
         updatedProduct.setProductId("non-existent-id");
         updatedProduct.setProductName("Ghost Product");
@@ -136,6 +143,11 @@ class ProductRepositoryTest {
 
     @Test
     void testDeleteProductIfNotFound() {
+        Product setupProduct = new Product();
+        setupProduct.setProductName("Sampo Cap Bambang");
+        setupProduct.setProductQuantity(100);
+        productRepository.create(setupProduct);
+
         boolean deleted = productRepository.delete("non-existent-id");
 
         assertFalse(deleted);

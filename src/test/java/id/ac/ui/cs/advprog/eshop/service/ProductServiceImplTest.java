@@ -9,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -29,6 +32,31 @@ class ProductServiceImplTest {
         product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
+    }
+
+    @Test
+    void testCreate() {
+        when(productRepository.create(product)).thenReturn(product);
+
+        Product result = productService.create(product);
+
+        assertNotNull(result);
+        assertEquals(product.getProductId(), result.getProductId());
+        verify(productRepository, times(1)).create(product);
+    }
+
+    @Test
+    void testFindAll() {
+        List<Product> productList = new ArrayList<>();
+        productList.add(product);
+        when(productRepository.findAll()).thenReturn(productList.iterator());
+
+        List<Product> result = productService.findAll();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(product.getProductId(), result.get(0).getProductId());
+        verify(productRepository, times(1)).findAll();
     }
 
     @Test
