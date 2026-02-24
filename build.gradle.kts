@@ -1,6 +1,7 @@
 plugins {
     java
     jacoco
+    id("org.sonarqube") version "4.4.1.3373"
     id("org.springframework.boot") version "3.5.10"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -8,6 +9,14 @@ plugins {
 group = "id.ac.ui.cs.advprog"
 version = "0.0.1-SNAPSHOT"
 description = "eshop"
+
+sonar {
+    properties {
+        property("sonar.projectKey", "A-Wildan-Anshari-Hidayat-2406396590_Modul-1-Coding-Standards")
+        property("sonar.organization", "a-wildan-anshari-hidayat")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
+}
 
 java {
     toolchain {
@@ -69,4 +78,8 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
 }
