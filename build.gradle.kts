@@ -13,7 +13,7 @@ description = "eshop"
 sonar {
     properties {
         property("sonar.projectKey", "A-Wildan-Anshari-Hidayat-2406396590_Modul-1-Coding-Standards")
-        property("sonar.organization", "a-wildan-anshari-hidayat")
+        property("sonar.organization", "a-wildan-anshari-hidayat-2406396590")
         property("sonar.host.url", "https://sonarcloud.io")
     }
 }
