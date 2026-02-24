@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -33,6 +36,37 @@ class ProductControllerTest {
         product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
         product.setProductName("Sampo Cap Bambang");
         product.setProductQuantity(100);
+    }
+
+    @Test
+    void testCreateProductPage() {
+        String viewName = productController.createProductPage(model);
+
+        assertEquals("createProduct", viewName);
+        verify(model, times(1)).addAttribute(eq("product"), any(Product.class));
+    }
+
+    @Test
+    void testCreateProductPost() {
+        when(service.create(product)).thenReturn(product);
+
+        String viewName = productController.createProductPost(product, model);
+
+        assertEquals("redirect:list", viewName);
+        verify(service, times(1)).create(product);
+    }
+
+    @Test
+    void testProductListPage() {
+        List<Product> productList = new ArrayList<>();
+        productList.add(product);
+        when(service.findAll()).thenReturn(productList);
+
+        String viewName = productController.productListPage(model);
+
+        assertEquals("productList", viewName);
+        verify(service, times(1)).findAll();
+        verify(model, times(1)).addAttribute("products", productList);
     }
 
     @Test
