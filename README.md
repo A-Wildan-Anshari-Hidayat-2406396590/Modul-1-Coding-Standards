@@ -25,3 +25,14 @@ Refleksi 3
 
 2. **Evaluasi Continuous Integration dan Continuous Deployment (CI/CD):**
    Menurut saya, penerapan saat ini sudah memenuhi definisi *Continuous Integration* dan *Continuous Deployment*. *Continuous Integration* tercapai melalui dua buah workflow GitHub Actions (`ci.yml` dan `sonarcloud.yml`), yang secara otomatis menjalankan seluruh Test Suite, mengecek metrik Code Coverage menggunakan JaCoCo, dan melakukan analisis statik *code quality* melalui SonarCloud setiap kali ada *push* atau *pull request* baru. Sementara itu, *Continuous Deployment* berhasil diterapkan dengan menghubungkan branch GitHub kita ke platform PaaS Koyeb menggunakan sebuah `Dockerfile`. Hal ini membuat setiap kode baru yang di-merge akan otomatis di-build menjadi container image dan di-deploy ke production environment secara mulus tanpa intervensi manual tambahan. Otomatisasi proses inilah yang secara akurat merepresentasikan penerapan CI/CD.
+
+Refleksi 4
+
+1. Prinsip SOLID yang saya terapkan pada proyek ini adalah Single Responsibility Principle (SRP) dengan memisahkan `CarController` dari `ProductController`; 
+Open-Closed Principle (OCP) dan Dependency Inversion Principle (DIP) dengan bergantung pada interface `CarService` di sisi Controller alih-alih menggunakan class implementasinya langsung; 
+Liskov Substitution Principle (LSP) dengan menghapus inheritance `extends ProductController` pada `CarController` yang kurang tepat secara logika; 
+Interface Segregation Principle (ISP) di mana interface dipilah spesifik untuk masing-masing entitas (`CarService` dan `ProductService`).
+
+2. Keuntungan menerapkan prinsip SOLID adalah kode menjadi terstruktur, mudah dikelola, dan scalable. Contohnya berkat penerapan SRP, apabila ada error pada halaman fitur produk, kita cukup fokus membedah file `ProductController` tanpa terganggu oleh keruwetan kerangka logika fitur mobil. Contoh lainnya melalui DIP dan OCP, jika di masa depan penyimpanan data `Car` diganti dari memori list menjadi database sungguhan, kita tinggal membuat implementasi service baru tanpa perlu mengotak-atik apalagi memodifikasi logika *routing* di dalam `CarController` itu sendiri.
+
+3. Kerugian jika mengabaikan prinsip SOLID adalah kode akan menjadi berantakan, monolitik, dan rentan terhadap kejanggalan sistem (fragile). Contohnya jika menolak SRP dan memaksakan menggabung rute `Car` ke dalam `ProductController`, ukurannya akan membesar, sehingga sangat sulit dibaca dan gampang terkena merge conflict . Selain itu, jika menyalahi LSP (misal membiarkan `CarController` mewarisi `ProductController`), sedikit saja revisi pada kelas dasar (*superclass*) bisa merusak fungsionalitas turunan secara tak terduga.
