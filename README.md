@@ -36,3 +36,16 @@ Interface Segregation Principle (ISP) di mana interface dipilah spesifik untuk m
 2. Keuntungan menerapkan prinsip SOLID adalah kode menjadi terstruktur, mudah dikelola, dan scalable. Contohnya berkat penerapan SRP, apabila ada error pada halaman fitur produk, kita cukup fokus membedah file `ProductController` tanpa terganggu oleh keruwetan kerangka logika fitur mobil. Contoh lainnya melalui DIP dan OCP, jika di masa depan penyimpanan data `Car` diganti dari memori list menjadi database sungguhan, kita tinggal membuat implementasi service baru tanpa perlu mengotak-atik apalagi memodifikasi logika *routing* di dalam `CarController` itu sendiri.
 
 3. Kerugian jika mengabaikan prinsip SOLID adalah kode akan menjadi berantakan, monolitik, dan rentan terhadap kejanggalan sistem (fragile). Contohnya jika menolak SRP dan memaksakan menggabung rute `Car` ke dalam `ProductController`, ukurannya akan membesar, sehingga sangat sulit dibaca dan gampang terkena merge conflict . Selain itu, jika menyalahi LSP (misal membiarkan `CarController` mewarisi `ProductController`), sedikit saja revisi pada kelas dasar (*superclass*) bisa merusak fungsionalitas turunan secara tak terduga.
+
+Refleksi 5
+
+1. Alur Test-Driven Development (TDD) menurut saya terbukti cukup bermanfaat. TDD membiasakan saya untuk memikirkan matang-matang requirements dan batasan modul `Order` sebelum mengimplementasikan fungsi programnya. Dengan membuat test di fase [RED] duluan, pas masuk fase [GREEN] arah pengerjaannya jadi lebih jelas, sehingga terhindar dari overengineering. Walaupun begitu, untuk *testing* kompleks ke depannya, saya harus lebih hati-hati agar desain code-nya tidak memaksakan diri sekadar "bisa lulus test" dan pada akhirnya malah mengorbankan kualitas dan tujuan fungsionalitas murninya.
+
+2. Secara garis besar, unit test yang dibuat (khususnya untuk service dan repository) sudah mengamalkan prinsip F.I.R.S.T:
+    - Fast: Eksekusi test sangat cepat berkat penggunaan mock dari Mockito, jadi tidak perlu setup panjang lebar atau koneksi database.
+    - Independent: Tiap method test independen dengan di-reset ulang dan dijaga state-nya oleh `@BeforeEach`.
+    - Repeatable: Test bisa dijalankan ulang pakai *environment* lokal apa pun dengan probabilitas hasil yang selalu mutlak konsisten.
+    - Self-Validating: Proses cek berhasil/gagal sudah murni bergantung dari asersi otomatis (via `assertEquals`, `assertTrue`, dst.) dan tidak bergantung pada output `.txt` untuk di-cek manual manusia.
+    - Timely: Kode test-nya dibentuk sebelum kode fungsional aslinya selesai dibuat (sesuai kaidah TDD sejati).
+
+    Untuk evaluasi pembuatannya, sepertinya saya masih lumayan banyak melakukan duplikasi kode setup (code duplication) yang melanggar *DRY principle*. Mungkin ke depannya pembuatan dummy data/object bisa dipisah ke helper method kecil (fixture) biar file test-nya lebih ringkas dan enak dibaca.

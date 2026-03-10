@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Order History</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h3>Order History</h3>
+
+        <form th:action="@{/order/history}" method="post">
+            <div class="form-group mb-3">
+                <label for="authorInput">Author Name</label>
+                <input name="author" type="text" class="form-control col-md-4" id="authorInput"
+                    placeholder="Enter author name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">View History</button>
+        </form>
+
+        <div th:if="${orders != null}" class="mt-4">
+            <h4>Orders by <span th:text="${author}"></span></h4>
+            <table class="table border text-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${order.id}"></td>
+                        <td th:text="${order.status}"></td>
+                        <td>
+                            <a th:if="${order.status == 'WAITING_PAYMENT'}"
+                                th:href="@{/order/pay/{orderId}(orderId=${order.id})}"
+                                class="btn btn-sm btn-success">Pay</a>
+                            <span th:unless="${order.status == 'WAITING_PAYMENT'}">-</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
