@@ -31,23 +31,23 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment setStatus(Payment payment, String status) {
         Payment result = paymentRepository.findById(payment.getId());
-        if (result != null) {
-            Payment newPayment = new Payment(payment.getId(), payment.getMethod(), payment.getPaymentData(), status);
-            paymentRepository.save(newPayment);
-
-            Order order = orderRepository.findById(payment.getId());
-            if (order != null) {
-                if (PaymentStatus.SUCCESS.getValue().equals(status)) {
-                    order.setStatus(OrderStatus.SUCCESS.getValue());
-                } else if (PaymentStatus.REJECTED.getValue().equals(status)) {
-                    order.setStatus(OrderStatus.FAILED.getValue());
-                }
-                orderRepository.save(order);
-            }
-            return newPayment;
-        } else {
+        if (result == null) {
             throw new NoSuchElementException();
         }
+
+        Payment newPayment = new Payment(payment.getId(), payment.getMethod(), payment.getPaymentData(), status);
+        paymentRepository.save(newPayment);
+
+        Order order = orderRepository.findById(payment.getId());
+        if (order != null) {
+            if (PaymentStatus.SUCCESS.getValue().equals(status)) {
+                order.setStatus(OrderStatus.SUCCESS.getValue());
+            } else if (PaymentStatus.REJECTED.getValue().equals(status)) {
+                order.setStatus(OrderStatus.FAILED.getValue());
+            }
+            orderRepository.save(order);
+        }
+        return newPayment;
     }
 
     @Override
