@@ -11,16 +11,13 @@ public class PaymentRepository {
     private List<Payment> paymentData = new ArrayList<>();
 
     public Payment save(Payment payment) {
-        int i = 0;
-        for (Payment savedPayment : paymentData) {
+        for (int i = 0; i < paymentData.size(); i++) {
+            Payment savedPayment = paymentData.get(i);
             if (savedPayment.getId().equals(payment.getId())) {
-                paymentData.remove(i);
-                paymentData.add(i, payment);
+                paymentData.set(i, payment);
                 return payment;
             }
-            i += 1;
         }
-
         paymentData.add(payment);
         return payment;
     }
