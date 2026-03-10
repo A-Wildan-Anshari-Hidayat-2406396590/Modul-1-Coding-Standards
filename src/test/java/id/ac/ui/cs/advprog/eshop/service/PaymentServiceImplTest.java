@@ -3,6 +3,8 @@ package id.ac.ui.cs.advprog.eshop.service;
 import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
+import id.ac.ui.cs.advprog.eshop.model.Product;
+import id.ac.ui.cs.advprog.eshop.repository.OrderRepository;
 import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,9 @@ class PaymentServiceImplTest {
     @Mock
     PaymentRepository paymentRepository;
 
+    @Mock
+    OrderRepository orderRepository;
+
     List<Payment> payments;
     Order order;
     Map<String, String> paymentDataVoucher;
@@ -37,13 +42,21 @@ class PaymentServiceImplTest {
     @BeforeEach
     void setUp() {
         payments = new ArrayList<>();
+
+        List<Product> products = new ArrayList<>();
+        Product product = new Product();
+        product.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setProductName("Sampo Cap Bambang");
+        product.setProductQuantity(2);
+        products.add(product);
+
         order = new Order("eb558e9f-1c39-460e-8860-71af6af63bd6",
-                new ArrayList<>(), 1375239600000L, "Safira Sudrajat");
+                products, 1375239600000L, "Safira Sudrajat");
 
         paymentDataVoucher = new HashMap<>();
         paymentDataVoucher.put("voucherCode", "ESHOP1234ABC5678");
 
-        Payment payment = new Payment("1", "VOUCHER_CODE", paymentDataVoucher, "SUCCESS");
+        Payment payment = new Payment(order.getId(), "VOUCHER_CODE", paymentDataVoucher, "SUCCESS");
         payments.add(payment);
     }
 
@@ -69,12 +82,14 @@ class PaymentServiceImplTest {
         Payment payment = payments.get(0);
         when(paymentRepository.findById(payment.getId())).thenReturn(payment);
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderRepository.findById(payment.getId())).thenReturn(order);
 
         Payment result = paymentService.setStatus(payment, "SUCCESS");
 
         assertEquals("SUCCESS", result.getStatus());
         assertEquals(OrderStatus.SUCCESS.getValue(), order.getStatus());
         verify(paymentRepository, times(1)).save(any(Payment.class));
+        verify(orderRepository, times(1)).save(any(Order.class));
     }
 
     @Test
@@ -82,12 +97,14 @@ class PaymentServiceImplTest {
         Payment payment = payments.get(0);
         when(paymentRepository.findById(payment.getId())).thenReturn(payment);
         when(paymentRepository.save(any(Payment.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(orderRepository.findById(payment.getId())).thenReturn(order);
 
         Payment result = paymentService.setStatus(payment, "REJECTED");
 
         assertEquals("REJECTED", result.getStatus());
         assertEquals(OrderStatus.FAILED.getValue(), order.getStatus());
         verify(paymentRepository, times(1)).save(any(Payment.class));
+        verify(orderRepository, times(1)).save(any(Order.class));
     }
 
     @Test
